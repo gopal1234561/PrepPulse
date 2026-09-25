@@ -78,7 +78,7 @@ const completed=tasks.filter(t=>t.done).length,doneMinutes=tasks.filter(t=>t.don
 const daysLeft=useMemo(()=>{const d=new Date("2027-02-01T00:00:00+05:30");return Math.max(0,Math.ceil((d-new Date())/86400000))},[]);
 const recommendation=useMemo(()=>{const incomplete=tasks.find(t=>!t.done);if(incomplete)return{title:incomplete.title,detail:incomplete.subject+" · "+incomplete.topic+" · "+incomplete.minutes+" min"};const weak=[...SUBJECTS].sort((a,b)=>(progress[a]?.percent||0)-(progress[b]?.percent||0))[0];return{title:"Revise "+weak,detail:(progress[weak]?.percent||0)+"% progress · start with PYQs"}},[tasks,progress]);
 
-const generatePlan=()=>{const generated=makeDailyPlan(progress,mistakes,today);setTasks(generated);setPlanDate(today);localStorage.setItem("pp_plan_date",today);setToast("Today's plan regenerated from your current progress.")};
+const generatePlan=()=>{const generated=makeDailyPlan(progress,mistakes,today+"-"+Date.now());setTasks(generated);setPlanDate(today);localStorage.setItem("pp_plan_date",today);setToast("New study plan generated from your current progress.")};
 const toggleTask=id=>setTasks(ts=>ts.map(t=>t.id===id?{...t,done:!t.done}:t));
 const addTask=()=>{if(!newTask.trim())return;setTasks(ts=>[...ts,{id:Date.now(),title:newTask.trim(),subject:"General Aptitude",topic:"Personal task",minutes:45,done:false,auto:false}]);setNewTask("")};
 const resetDay=()=>setTasks(ts=>ts.map(t=>({...t,done:false})));
